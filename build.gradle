@@ -14,7 +14,29 @@ repositories {
 }
 
 dependencies {
+
+	// basic
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// dev tools
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+
+	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// logger
+	implementation 'org.slf4j:slf4j-api'
+	implementation 'ch.qos.logback:logback-classic'
+	implementation 'io.lettuce:lettuce-core'
+
+	// saro
+	implementation 'me.saro:commons:3.0.2'
+
+	// lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
 }
