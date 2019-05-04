@@ -1,4 +1,4 @@
-package me.saro.smtp;
+package me.saro.mail;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

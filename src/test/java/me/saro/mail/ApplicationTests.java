@@ -1,4 +1,4 @@
-package me.saro.smtp;
+package me.saro.mail;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
