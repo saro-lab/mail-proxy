@@ -1,0 +1,6 @@
+#  make conf file the same path to the jar file
+host: 127.0.0.1
+port: 1234
+user: abc
+pass: 123
+mail:
