@@ -1,6 +1,7 @@
 package me.saro.mail.server;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
@@ -26,7 +27,11 @@ public class Auth {
     @Column(nullable = false)
     String user;
 
-    @JsonIgnore
     @Column(nullable = false)
     String pass;
+
+    public Auth mask() {
+        pass = "****";
+        return this;
+    }
 }
