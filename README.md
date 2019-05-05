@@ -37,6 +37,9 @@ curl -X POST localhost:8080/auth -H "Content-Type: application/json" -d '{"id":"
 # windows (using windows curl) : '" issue'
 curl -X POST localhost:8080/auth -H "Content-Type: application/json" -d "{\"id\":\"smtp-google-test\",\"host\":\"smtp.gmail.com\",\"port\":465,\"mail\":\"test@saro.me\",\"user\":\"test@saro.me\",\"pass\":\"password\"}"
 ```
+```
+{"code":"OK","msg":null,"data":null}
+```
 ### checking for the booked id
 ```
 curl localhost:8080/auth/smtp-google-test
