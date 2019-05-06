@@ -1,4 +1,4 @@
-package me.saro.mail.server;
+package me.saro.mail.auth;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
@@ -19,7 +19,7 @@ public class Auth {
     String host;
 
     @Column
-    @Range(min = 1, max=65535)
+    @Range(min = 1, max = 65535)
     int port;
 
     @Column(nullable = false)

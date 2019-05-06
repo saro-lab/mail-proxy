@@ -1,4 +1,4 @@
-package me.saro.mail.server;
+package me.saro.mail.auth;
 
 import org.springframework.data.repository.CrudRepository;
 

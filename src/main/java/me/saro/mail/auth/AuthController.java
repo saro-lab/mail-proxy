@@ -1,4 +1,4 @@
-package me.saro.mail.server;
+package me.saro.mail.auth;
 
 import me.saro.mail.pub.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,11 @@ public class AuthController {
     @GetMapping("/{id}")
     public Result<Auth> view(@PathVariable("id") String id) {
         return authService.view(id);
+    }
+
+    @GetMapping("/all")
+    public Result<Auth> viewAll() {
+        return authService.viewAll();
     }
 
     @GetMapping("/template")

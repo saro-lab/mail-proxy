@@ -1,4 +1,4 @@
-package me.saro.mail.server;
+package me.saro.mail.auth;
 
 import me.saro.commons.Converter;
 import me.saro.mail.pub.Code;
@@ -18,12 +18,16 @@ public class AuthService {
                 .orElseGet(() -> new Result(Code.NOT_FOUND, "id not found, please check id or register id", null));
     }
 
+    public Result<Auth> viewAll() {
+        return new Result(Code.OK,"", Converter.toStream(authRepository.findAll()).map(Auth::mask));
+    }
+
     public Result<Auth> template() {
         var auth = new Auth();
         auth.setId("id for using in the mail-proxy");
         auth.setHost("host");
         auth.setPort(0);
-        auth.setMail("e-mail address");
+        auth.setMail("email address");
         auth.setUser("username");
         auth.setPass("password");
 
@@ -32,6 +36,14 @@ public class AuthService {
 
     public Result<String> save(@RequestBody Auth auth) {
         try {
+            String id = auth.getId();
+
+            switch (id) {
+                case "all" :
+                case "template" :
+                    return new Result(Code.SAVE_FAIL, id + " is reserved word","");
+            }
+
             authRepository.save(auth);
             return new Result(Code.OK);
         } catch(Exception e) {
