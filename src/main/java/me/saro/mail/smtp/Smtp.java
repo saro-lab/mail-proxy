@@ -10,10 +10,9 @@ import java.util.List;
 
 @Data
 public class Smtp {
-    @NotNull @NotBlank String serverId;
-    @NotNull @NotBlank String user;
-    @NotNull Person from;
+    @NotNull @NotBlank String id;
     @NotEmpty List<Person> to;
     List<Person> cc;
-    String html;
+    String subject;
+    String content;
 }

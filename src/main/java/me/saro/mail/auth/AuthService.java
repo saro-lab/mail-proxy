@@ -22,6 +22,10 @@ public class AuthService {
         return new Result(Code.OK,"", Converter.toStream(authRepository.findAll()).map(Auth::mask));
     }
 
+    public Auth get(String id) {
+        return authRepository.findById(id).orElseThrow(() -> new RuntimeException("id not found, please check id or register id"));
+    }
+
     public Result<Auth> template() {
         var auth = new Auth();
         auth.setId("id for using in the mail-proxy");
