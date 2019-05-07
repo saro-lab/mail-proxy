@@ -8,7 +8,7 @@ download : [releases page](https://github.com/saro-lab/mail-proxy/releases)
 
 need to : jdk version 11 or later
 
-## create auth
+## execute
 ### basic
 - default port 8080
 ```
