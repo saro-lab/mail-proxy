@@ -4,10 +4,8 @@ It is a micro-service for separation from main application.
 currently, only smtp is supported.
 
 ## prepare
-### download
-[releases page](https://github.com/saro-lab/mail-proxy/releases)
-### need to
-jdk 11
+download : [releases page](https://github.com/saro-lab/mail-proxy/releases)
+need to : jdk version 11 or later
 
 ## create auth
 ### basic
