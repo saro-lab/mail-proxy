@@ -19,7 +19,7 @@ java -jar mail-proxy.jar
 java -jar mail-proxy.jar --server.port=80
 ```
 
-## step 2 : register auth
+## register auth
 ### auth check
 ```
 curl localhost:8080/auth/testAuthId
