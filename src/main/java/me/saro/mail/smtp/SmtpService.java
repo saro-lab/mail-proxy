@@ -4,6 +4,7 @@ import me.saro.commons.Converter;
 import me.saro.commons.Utils;
 import me.saro.commons.function.ThrowableConsumer;
 import me.saro.mail.auth.Auth;
+import me.saro.mail.auth.AuthPoolService;
 import me.saro.mail.auth.AuthService;
 import me.saro.mail.pub.Code;
 import me.saro.mail.pub.Person;
@@ -18,9 +19,7 @@ import javax.annotation.PreDestroy;
 import javax.mail.Message;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -29,9 +28,10 @@ public class SmtpService {
 
     final static int THREAD_COUNT = 64;
     ExecutorService sendAllExecutor;
-    Map<String, JavaMailSender> map = new ConcurrentHashMap<>();
+
 
     @Autowired AuthService authService;
+    @Autowired AuthPoolService authPoolService;
 
     public Result<String> send(Smtp smtp) {
 
@@ -40,13 +40,13 @@ public class SmtpService {
             JavaMailSender sender = getJavaMailSender(auth);
 
             sender.send(mimeMessage -> {
-                mimeMessage.setFrom(new Person(auth.getDisplayName(), auth.getMail()).toInternetAddress());
+                mimeMessage.setFrom(new Person(auth.getDisplay(), auth.getMail()).toInternetAddress());
                 smtp.getTo().stream()
                         .forEach(ThrowableConsumer.runtime(e -> mimeMessage.addRecipient(Message.RecipientType.TO, e.toInternetAddress())));
                 Optional.ofNullable(smtp.getCc()).orElse(Collections.emptyList()).stream()
-                        .forEach(ThrowableConsumer.runtime(e -> mimeMessage.addRecipient(Message.RecipientType.TO, e.toInternetAddress())));
+                        .forEach(ThrowableConsumer.runtime(e -> mimeMessage.addRecipient(Message.RecipientType.CC, e.toInternetAddress())));
                 mimeMessage.setSubject(smtp.getSubject());
-                mimeMessage.setText(smtp.getContent(), "utf-8", "html");
+                mimeMessage.setText(smtp.getContent(), "UTF-8", "html");
             });
         } catch (Exception e) {
             return new Result<>(Code.EXCEPTION, e.getMessage(), Converter.toString(e));
@@ -64,26 +64,23 @@ public class SmtpService {
         smtp.setId("registered auth id");
         smtp.setTo(List.of(new Person("display", "email"), new Person("display", "email")));
         smtp.setCc(List.of(new Person("display", "email"), new Person("display", "email")));
+        smtp.setSubject("email subject");
         smtp.setContent("html content");
         return new Result<>(Code.OK, "auth template", smtp);
     }
 
     public JavaMailSender getJavaMailSender(Auth auth) {
-        JavaMailSender sender = map.get(auth.getId());
+        JavaMailSender sender = authPoolService.getJavaMailSender(auth.getId());
 
         if (sender == null) {
             JavaMailSenderImpl jmsi = new JavaMailSenderImpl();
             jmsi.setUsername(auth.getUser());
             jmsi.setPassword(auth.getPass());
             jmsi.setJavaMailProperties(auth.toProperties());
-            map.put(auth.getId(), (sender = jmsi));
+            authPoolService.setJavaMailSender(auth.getId(), (sender = jmsi));
         }
 
         return sender;
-    }
-
-    public void removeJavaMailSender(String id) {
-        map.remove(id);
     }
 
     @PostConstruct
