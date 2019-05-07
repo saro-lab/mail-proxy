@@ -30,7 +30,7 @@ public class Auth {
     String mail;
 
     @Column(nullable = false)
-    String displayName;
+    String display;
 
     @Column(nullable = false)
     String user;

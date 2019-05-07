@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class AuthService {
-    @Autowired
-    AuthRepository authRepository;
+
+    @Autowired AuthRepository authRepository;
+    @Autowired AuthPoolService authPoolService;
 
     public Result<Auth> view(String id) {
         return authRepository.findById(id)
@@ -31,7 +32,8 @@ public class AuthService {
         auth.setId("id for using in the mail-proxy");
         auth.setHost("host");
         auth.setPort(0);
-        auth.setMail("email address");
+        auth.setDisplay("sender display");
+        auth.setMail("sender email address");
         auth.setUser("username");
         auth.setPass("password");
 
@@ -49,6 +51,7 @@ public class AuthService {
             }
 
             authRepository.save(auth);
+            authPoolService.delAll(id);
             return new Result(Code.OK);
         } catch(Exception e) {
             return new Result(Code.EXCEPTION, e.getMessage(), Converter.toString(e));
