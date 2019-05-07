@@ -1,11 +1,8 @@
 package me.saro.mail.auth;
 
 import lombok.Data;
-import lombok.SneakyThrows;
-import me.saro.mail.pub.Person;
 import org.hibernate.validator.constraints.Range;
 
-import javax.mail.internet.InternetAddress;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,27 +14,28 @@ import java.util.Properties;
 @Table(name = "mail_auth")
 public class Auth {
     @Id
-    String id;
+    private String id;
 
     @Column(nullable = false)
-    String host;
+    private String host;
 
     @Column
     @Range(min = 1, max = 65535)
-    int port;
+    private int port;
 
     @Column(nullable = false)
-    String mail;
+    private String mail;
 
     @Column(nullable = false)
-    String display;
+    private String display;
 
     @Column(nullable = false)
-    String user;
+    private String user;
 
     @Column(nullable = false)
-    String pass;
+    private String pass;
 
+    @SuppressWarnings("WeakerAccess")
     public Auth mask() {
         pass = "****";
         return this;

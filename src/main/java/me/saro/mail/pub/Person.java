@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -21,7 +20,7 @@ public class Person {
     @NotNull @NotBlank String mail;
 
     public String toString() {
-        if (display == null && display.isBlank()) {
+        if (display == null || display.isBlank()) {
             display = mail;
         }
         return display + " <" + mail + ">";
