@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/smtp")
 public class SmtpContoller {
 
     @Autowired SmtpService smtpService;
