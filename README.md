@@ -18,6 +18,13 @@ java -jar mail-proxy.jar
 ```
 java -jar mail-proxy.jar --server.port=80
 ```
+### specify the data-file path
+```
+# in general
+java -jar mail-proxy.jar --data.path="/nfsdata/module/mail-proxy"
+# windows
+java -jar mail-proxy.jar --data.path="C:/data-path"
+```
 
 ## register auth
 ### auth check
