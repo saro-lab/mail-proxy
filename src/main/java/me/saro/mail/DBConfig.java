@@ -15,7 +15,7 @@ public class DBConfig {
     public DataSource dataSource() {
         var conf = new HikariDataSource();
         conf.setDriverClassName("org.h2.Driver");
-        conf.setJdbcUrl("jdbc:h2:~/data.db/mail");
+        conf.setJdbcUrl("jdbc:h2:./mail-proxy-data/mail");
         conf.setUsername("user");
         conf.setPassword("pass");
         return conf;
