@@ -6,8 +6,8 @@ plugins {
 apply plugin: 'io.spring.dependency-management'
 
 group = 'me.saro'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '12'
+version = '1.0.0'
+sourceCompatibility = '11'
 
 repositories {
 	mavenCentral()
