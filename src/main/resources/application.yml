@@ -1,4 +1,4 @@
-conf: conf.yml
+data.path: ./mail-proxy-data
 
 spring:
   jpa:
