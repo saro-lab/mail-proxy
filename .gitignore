@@ -2,7 +2,7 @@ HELP.md
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar
-/mail-proxy-data/
+/datafile/
 
 ### STS ###
 .apt_generated
