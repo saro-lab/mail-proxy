@@ -1,4 +1,4 @@
-data.path: ./mail-proxy-data
+data.path: ./datafile
 
 spring:
   jpa:

@@ -1,26 +1,38 @@
 package me.saro.mail.auth;
 
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import me.saro.commons.Converter;
 import me.saro.mail.pub.Code;
 import me.saro.mail.pub.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+
+import java.io.File;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class AuthService {
 
     @Autowired AuthRepository authRepository;
     @Autowired AuthPoolService authPoolService;
 
+    @Value("${data.path}/reserved.json")
+    private String reservedAuthListFileName;
+
     public Result<Auth> view(String id) {
         return authRepository.findById(id)
-                .map(e -> new Result(Code.OK,"", e.mask()))
-                .orElseGet(() -> new Result(Code.NOT_FOUND, "id not found, please check id or register id", null));
+                .map(e -> new Result<>(Code.OK,"", e.mask()))
+                .orElseGet(() -> new Result<>(Code.NOT_FOUND, "id not found, please check id or register id", null));
     }
 
-    public Result<Auth> viewAll() {
-        return new Result(Code.OK,"", Converter.toStream(authRepository.findAll()).map(Auth::mask));
+    public Result<List<Auth>> viewAll() {
+        return new Result<>(Code.OK,"", Converter.toStream(authRepository.findAll()).map(Auth::mask).collect(Collectors.toList()));
     }
 
     public Auth get(String id) {
@@ -37,24 +49,40 @@ public class AuthService {
         auth.setUser("username");
         auth.setPass("password");
 
-        return new Result(Code.OK, "auth template", auth);
+        return new Result<>(Code.OK, "auth template", auth);
     }
 
-    public Result<String> save(@RequestBody Auth auth) {
+    public Result<String> save(Auth auth) {
         try {
             String id = auth.getId();
 
             switch (id) {
                 case "all" :
                 case "template" :
-                    return new Result(Code.SAVE_FAIL, id + " is reserved word","");
+                    return new Result<>(Code.SAVE_FAIL, id + " is reserved word","");
             }
 
             authRepository.save(auth);
             authPoolService.delAll(id);
-            return new Result(Code.OK);
+            return new Result<>(Code.OK);
         } catch(Exception e) {
-            return new Result(Code.EXCEPTION, e.getMessage(), Converter.toString(e));
+            return new Result<>(Code.EXCEPTION, e.getMessage(), Converter.toString(e));
+        }
+    }
+
+    public void loadReservedAuth() {
+        File file = new File(reservedAuthListFileName);
+        if (file.exists()) {
+            log.info("find reserved auth list file");
+            try {
+                List<Auth> authList = new ObjectMapper().readValue(Converter.toString(file, "UTF-8"), new TypeReference<List<Auth>>() {});
+                for (Auth auth : authList) {
+                    save(auth);
+                    log.info("put reserved auth id : " + auth.getId());
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
         }
     }
 }
