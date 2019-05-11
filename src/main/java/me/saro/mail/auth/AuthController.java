@@ -4,6 +4,8 @@ import me.saro.mail.pub.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -17,7 +19,7 @@ public class AuthController {
     }
 
     @GetMapping("/all")
-    public Result<Auth> viewAll() {
+    public Result<List<Auth>> viewAll() {
         return authService.viewAll();
     }
 
