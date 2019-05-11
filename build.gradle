@@ -19,9 +19,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
-	// dev tools
-	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
-
 	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
