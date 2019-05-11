@@ -5,8 +5,3 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-  devtools:
-    livereload:
-      enabled: true
-    restart:
-      enabled: true
