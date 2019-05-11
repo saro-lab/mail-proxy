@@ -26,7 +26,7 @@ java -jar mail-proxy.jar --data.path="/nfsdata/module/mail-proxy"
 java -jar mail-proxy.jar --data.path="C:/data-path"
 ```
 
-## register auth
+## dynamic register auth
 ### auth check
 ```
 curl localhost:8080/auth/testAuthId
@@ -55,6 +55,23 @@ curl localhost:8080/auth/smtp-google-test
 ```
 ```
 {"code":"OK","msg":"","data":{"id":"smtp-google-test","host":"smtp.gmail.com","port":465,"mail":"test@saro.me","display":"saro tester","user":"test@saro.me","pass":"****"}}
+```
+
+## reserved register auth
+### make reserved file "<data.path>/reserved.json"
+### default "<data.path>" is "./datafile"
+```
+[
+   {
+      "id":"smtp-google-test",
+      "host":"smtp.gmail.com",
+      "port":465,
+      "mail":"themail@test.com",
+      "display":"test sender",
+      "user":"username",
+      "pass":"password"
+   }
+]
 ```
 
 ## SMTP
