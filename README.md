@@ -58,7 +58,7 @@ curl localhost:8080/auth/smtp-google-test
 ```
 
 ## reserved register auth
-### make reserved file "<data.path>/reserved.json"
+### make reserved file "<data.path>/auth.json"
 ### default "<data.path>" is "./datafile"
 ```
 [
