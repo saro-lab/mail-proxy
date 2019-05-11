@@ -21,6 +21,6 @@ public class Application implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		authService.loadReservedAuth();
+		authService.loadReservedList();
 	}
 }

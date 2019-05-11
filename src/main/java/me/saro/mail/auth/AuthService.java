@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,8 +24,9 @@ public class AuthService {
     @Autowired AuthRepository authRepository;
     @Autowired AuthPoolService authPoolService;
 
-    @Value("${data.path}/reserved.json")
-    private String reservedAuthListFileName;
+    @Value("${data.path}/auth.json") String reservedAuthListFileName;
+
+    List<String> reservedList = Collections.synchronizedList(new ArrayList<>());
 
     public Result<Auth> view(String id) {
         return authRepository.findById(id)
@@ -61,6 +64,9 @@ public class AuthService {
                 case "template" :
                     return new Result<>(Code.SAVE_FAIL, id + " is reserved word","");
             }
+            if (reservedList.contains(id)) {
+                return new Result<>(Code.SAVE_FAIL, id + " is reserved id","");
+            }
 
             authRepository.save(auth);
             authPoolService.delAll(id);
@@ -70,7 +76,7 @@ public class AuthService {
         }
     }
 
-    public void loadReservedAuth() {
+    public void loadReservedList() {
         File file = new File(reservedAuthListFileName);
         if (file.exists()) {
             log.info("find reserved auth list file");
@@ -78,7 +84,8 @@ public class AuthService {
                 List<Auth> authList = new ObjectMapper().readValue(Converter.toString(file, "UTF-8"), new TypeReference<List<Auth>>() {});
                 for (Auth auth : authList) {
                     save(auth);
-                    log.info("put reserved auth id : " + auth.getId());
+                    reservedList.add(auth.getId());
+                    log.info("put reserved id : " + auth.getId());
                 }
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
