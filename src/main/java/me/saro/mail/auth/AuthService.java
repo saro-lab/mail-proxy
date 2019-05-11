@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -26,20 +28,25 @@ public class AuthService {
 
     @Value("${data.path}/auth.json") String reservedAuthListFileName;
 
-    List<String> reservedList = Collections.synchronizedList(new ArrayList<>());
+    Map<String, Auth> reserved = new ConcurrentHashMap<>();
 
     public Result<Auth> view(String id) {
-        return authRepository.findById(id)
+        return Optional.ofNullable(reserved.get(id))
+                .or(() -> authRepository.findById(id))
                 .map(e -> new Result<>(Code.OK,"", e.mask()))
                 .orElseGet(() -> new Result<>(Code.NOT_FOUND, "id not found, please check id or register id", null));
     }
 
     public Result<List<Auth>> viewAll() {
-        return new Result<>(Code.OK,"", Converter.toStream(authRepository.findAll()).map(Auth::mask).collect(Collectors.toList()));
+        return new Result<>(Code.OK,"", Stream.
+                concat(reserved.values().stream(), Converter.toStream(authRepository.findAll())).map(Auth::mask)
+                .collect(Collectors.toList()));
     }
 
     public Auth get(String id) {
-        return authRepository.findById(id).orElseThrow(() -> new RuntimeException("id not found, please check id or register id"));
+        return Optional.ofNullable(reserved.get(id))
+                .or(() -> authRepository.findById(id))
+                .orElseThrow(() -> new RuntimeException("id not found, please check id or register id"));
     }
 
     public Result<Auth> template() {
@@ -64,7 +71,7 @@ public class AuthService {
                 case "template" :
                     return new Result<>(Code.SAVE_FAIL, id + " is reserved word","");
             }
-            if (reservedList.contains(id)) {
+            if (reserved.containsKey(id)) {
                 return new Result<>(Code.SAVE_FAIL, id + " is reserved id","");
             }
 
@@ -83,8 +90,7 @@ public class AuthService {
             try {
                 List<Auth> authList = new ObjectMapper().readValue(Converter.toString(file, "UTF-8"), new TypeReference<List<Auth>>() {});
                 for (Auth auth : authList) {
-                    save(auth);
-                    reservedList.add(auth.getId());
+                    reserved.put(auth.getId(), auth);
                     log.info("put reserved id : " + auth.getId());
                 }
             } catch (Exception e) {
