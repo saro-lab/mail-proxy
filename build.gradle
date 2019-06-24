@@ -16,11 +16,8 @@ repositories {
 dependencies {
 
 	// basic
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-
-	// test
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	// logger
 	implementation 'org.slf4j:slf4j-api'
@@ -28,7 +25,7 @@ dependencies {
 	implementation 'io.lettuce:lettuce-core'
 
 	// saro
-	implementation 'me.saro:commons:3.0.2'
+	implementation 'me.saro:commons:4.0.3'
 
 	// db: jpa
 	runtimeOnly 'com.h2database:h2'
@@ -41,4 +38,6 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
+	// test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
